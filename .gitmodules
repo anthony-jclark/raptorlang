@@ -1,0 +1,9 @@
+[submodule "src/cxxopts"]
+	path = support/cxxopts
+	url = https://github.com/jarro2783/cxxopts.git
+[submodule "test/Catch"]
+	path = support/Catch
+	url = https://github.com/philsquared/Catch.git
+[submodule "src/easyloggingpp"]
+	path = support/easyloggingpp
+	url = https://github.com/easylogging/easyloggingpp.git

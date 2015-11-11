@@ -27,9 +27,11 @@
 *.out
 *.app
 
-# Ignore the build and lib dirs
+# Ignore the build, lib, and log dirs
 build
 lib/*
+logs
+log
 
 # Ignore any executables
 bin/*
