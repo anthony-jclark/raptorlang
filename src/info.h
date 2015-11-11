@@ -9,7 +9,7 @@
  */
 
 #define APPLICATION_NAME               "raptorlang"
-#define APPLICATION_CODENAME           "raptorlang"
+#define APPLICATION_CODENAME           "raptor"
 #define APPLICATION_COPYRIGHT_YEARS    "2015"
 /* #undef APPLICATION_VERSION_MAJOR */
 #define APPLICATION_VERSION_MINOR      "1"

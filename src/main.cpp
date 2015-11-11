@@ -19,21 +19,6 @@ using std::make_unique;
 INITIALIZE_EASYLOGGINGPP
 
 
-// ------------------------------------------------------------------------
-// Perform a case insensitive comparison between two strings
-// ------------------------------------------------------------------------
-bool caseInsensitiveCompare_pred(unsigned char a, unsigned char b) {
-    return std::tolower(a) == std::tolower(b);
-}
-
-bool caseInsensitiveCompare(string const& a, string const& b) {
-    if (a.length() == b.length()) {
-        return std::equal(b.begin(), b.end(), a.begin(), caseInsensitiveCompare_pred);
-    }
-    else {
-        return false;
-    }
-}
 
 // ------------------------------------------------------------------------
 // ------------------------------------------------------------------------

@@ -1,6 +1,6 @@
 ##############################################################
 #               CMake Project Wrapper Makefile               #
-############################################################## 
+##############################################################
 
 SHELL := /bin/bash
 RM    := rm -rf
@@ -31,7 +31,7 @@ distclean:
 	@- $(RM) ./docs/search
 	@- $(RM) ./docs/installdox
 
-
+# remove distclean and call the makefile in build
 ifeq ($(findstring distclean,$(MAKECMDGOALS)),)
 
     $(MAKECMDGOALS): ./build/Makefile

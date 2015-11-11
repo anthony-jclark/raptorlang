@@ -1,10 +1,11 @@
 # Anthony J. Clark. Copyright (C) 2015. Apache License 2.0.
 
+
 #
 # Project Properties
 #
 CMAKE_MINIMUM_REQUIRED (VERSION 3.0.0)
-PROJECT (raptorlang)
+PROJECT (raptor)
 SET (APPLICATION_NAME "raptorlang")
 SET (APPLICATION_CODENAME "${PROJECT_NAME}")
 SET (APPLICATION_COPYRIGHT_YEARS "2015")
@@ -18,16 +19,19 @@ SET (APPLICATION_VENDOR_NAME "AJC")
 SET (APPLICATION_VENDOR_URL "https://github.com/anthony-jclark/raptorlang")
 SET (APPLICATION_ID "${APPLICATION_VENDOR_ID}.${PROJECT_NAME}")
 
+
 #
 # Set Compiler Flag Options
 #
 SET (CMAKE_CXX_FLAGS "-std=c++1z -Wall -Wextra -Werror -Wconversion")
 SET (CMAKE_BUILD_TYPE debug)
 
+
 #
 # Debugging Options
 #
 SET (CMAKE_VERBOSE_MAKEFILE 0) # Use 1 for debugging, 0 for release
+
 
 #
 # Project Output Paths
@@ -36,11 +40,13 @@ SET (MAINFOLDER ${PROJECT_SOURCE_DIR})
 SET (EXECUTABLE_OUTPUT_PATH "${MAINFOLDER}/bin")
 SET (LIBRARY_OUTPUT_PATH "${MAINFOLDER}/lib")
 
+
 #
 # Project Search Paths
 #
 LIST (APPEND CMAKE_PREFIX_PATH "${MAINFOLDER}")
 SET (CMAKE_MODULE_PATH "${MAINFOLDER}/support/cmake_modules")
+
 
 #
 # Configure Files
@@ -63,18 +69,13 @@ FOREACH (CONFIGINPUT ${CONFIGINPUTS})
     CONFIGURE_FILE ("${CONFIGINPUT}" "${CONFIGOUTPUT2}")
 ENDFOREACH (CONFIGINPUT ${CONFIGINPUTS})
 
+
 #
 # Add Build Targets
 #
 ADD_SUBDIRECTORY (src)
-# ADD_SUBDIRECTORY (test)
+ADD_SUBDIRECTORY (test)
 
-#
-# Add Install Targets
-#
-# IF (EXISTS "${MAINFOLDER}/include/${PROJECT_NAME}" AND IS_DIRECTORY "${MAINFOLDER}/include/${PROJECT_NAME}")
-#     INSTALL(DIRECTORY "${MAINFOLDER}/include/${PROJECT_NAME}" DESTINATION "include")
-# ENDIF (EXISTS "${MAINFOLDER}/include/${PROJECT_NAME}" AND IS_DIRECTORY "${MAINFOLDER}/include/${PROJECT_NAME}")
 
 #
 # Add Documentation Targets

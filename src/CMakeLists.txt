@@ -1,13 +1,8 @@
 
 FILE (GLOB project_SRCS *.cpp *.cxx *.cc)
-
-# SET (project_LIBS ${Boost_LIBRARIES} ${QT_LIBRARIES} ${Log4Cxx_LIBRARIES})
 SET (project_BIN ${PROJECT_NAME})
 
 ADD_EXECUTABLE (${project_BIN} ${project_SRCS})
-
-# TARGET_LINK_LIBRARIES (${project_BIN})# ${project_LIBS})
-
 TARGET_INCLUDE_DIRECTORIES (${project_BIN} SYSTEM PUBLIC ${MAINFOLDER}/support/cxxopts/src/)
 TARGET_INCLUDE_DIRECTORIES (${project_BIN} SYSTEM PUBLIC ${MAINFOLDER}/support/easyloggingpp/src/)
 
