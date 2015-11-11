@@ -13,7 +13,8 @@ using std::make_unique;
 
 #include <cxxopts.hpp>
 
-#define _ELPP_THREAD_SAFE
+#define ELPP_NO_DEFAULT_LOG_FILE
+#define ELPP_THREAD_SAFE
 #include <easylogging++.h>
 INITIALIZE_EASYLOGGINGPP
 
@@ -25,7 +26,7 @@ bool caseInsensitiveCompare_pred(unsigned char a, unsigned char b) {
     return std::tolower(a) == std::tolower(b);
 }
 
-bool caseInsensitiveCompare(std::string const& a, std::string const& b) {
+bool caseInsensitiveCompare(string const& a, string const& b) {
     if (a.length() == b.length()) {
         return std::equal(b.begin(), b.end(), a.begin(), caseInsensitiveCompare_pred);
     }
@@ -51,9 +52,13 @@ int main(int argc, char* argv[])
         ("appid",               "Print the unique application identifier.");
     options.add_options("Logging")
         // CL arguments for EasyLogging++
-        ("v,verbose",           "Set verbosity level [0..9].", cxxopts::value<string>())
-        ("vmodule",             "Set verbosity of a glob.", cxxopts::value<vector<string>>())
-        ("logging-flags",       "Set logging flags (bitmask).", cxxopts::value<string>());
+        ("log-info",            "Toggle \"INFO\" messages (defaults to off).")
+        ("log-warning",         "Toggle \"WARNING\" messages (defaults to on).")
+        ("log-error",           "Toggle \"ERROR\" messages (defaults to on).")
+        ("log-fatal",           "Toggle \"FATAL\" messages (defaults to on).")
+        ("log-debug",           "Toggle \"DEBUG\" messages (defaults to off).")
+        ("log-trace",           "Toggle \"TRACE\" messages (defaults to off).")
+        ("log-file",            "Set the log filename.", cxxopts::value<string>(), "FILE");
 
     //
     // Parse command line arguments
@@ -70,28 +75,7 @@ int main(int argc, char* argv[])
     // - no other arguments will be checked and the program will terminate
     //
     if (options.count("help")) {
-        // raptorlang -v 0 --vmodule main --vmodule test=3 --vmodule "test3*=8"
-        // bin/raptorlang --logging-flags 3 Sets logging flag. In example i.e, 3, it sets logging flag to NewLineForContainer and AllowVerboseIfModuleNotSpecified. See logging flags section above for further details and values. See macros section to disable this function.
         std::cout << options.help({"", "Logging"}) << std::endl;
-
-            // "  (    1) NewLineForContainer\n"
-            // "  (    2) AllowVerboseIfModuleNotSpecified\n"
-            // "  (    4) LogDetailedCrashReason\n"
-            // "  (    8) DisableApplicationAbortOnFatalLog\n"
-            // "  (   16) ImmediateFlush\n"
-            // "  (   32) StrictLogFileSizeCheck\n"
-            // "  (   64) ColoredTerminalOutput\n"
-            // "  (  128) MultiLoggerSupport\n"
-            // "  (  256) DisablePerformanceTrackingCheckpointComparison\n"
-            // "  (  512) DisableVModules\n"
-            // "  ( 1024) DisableVModulesExtensions\n"
-            // "  ( 2048) HierarchicalLogging\n"
-            // "  ( 4096) CreateLoggerAutomatically\n"
-            // "  ( 8192) AutoSpacing\n"
-            // "  (16384) FixedTimeFormat\n"
-            //
-            // information about verbosity level
-
         std::exit(EXIT_SUCCESS);
     }
 
@@ -131,92 +115,72 @@ int main(int argc, char* argv[])
         //
         // Set the EasyLogging++ CL agruments
         //
-        auto ELPP_argc = 1;
-        vector<string> ELPP_argv_strings = {argv[0]};
+        auto argcELPP = 1;
+        vector<string> argvELPP_strs = {argv[0]};
 
-        if (options.count("verbose")) {
-            ++ELPP_argc;
-            ELPP_argv_strings.push_back("--v=" + options["verbose"].as<string>());
-        }
-
-        if (options.count("vmodule"))
-        {
-            ++ELPP_argc;
-            string smodules = "-vmodule=";
-            auto& modules = options["vmodule"].as<vector<string>>();
-            string sep = "";
-            for (const auto& m : modules) {
-                smodules += sep + m;
-                sep = ",";
-            }
-            ELPP_argv_strings.push_back(smodules);
-        }
-
-        if (options.count("logging-flags")) {
-            ++ELPP_argc;
-            ELPP_argv_strings.push_back("--logging-flags=" + options["logging-flags"].as<string>());
+        if (options.count("log-file")) {
+            ++argcELPP;
+            argvELPP_strs.push_back("--default-log-file=" + options["log-file"].as<string>());
         }
 
         // Convert vector of strings into appropriate format
-        // - vec<str> -> vec<uptr<ch[]>> -> vec<ch*>
-        vector<unique_ptr<char[]>> ELPP_argv_managed;
-        vector<char*> ELPP_argv;
-        for (const auto& arg_string : ELPP_argv_strings) {
-            ELPP_argv_managed.push_back(make_unique<char[]>(arg_string.length()+1));
-            std::copy(arg_string.begin(), arg_string.end(), ELPP_argv_managed.back().get());
-            ELPP_argv_managed.back().get()[arg_string.length()] = '\0';
-            ELPP_argv.push_back(ELPP_argv_managed.back().get());
+        // - vec<str> -> vec<uptr<ch[]>> -> vec<ch*> (data)
+        vector<unique_ptr<char[]>> argvELPP_chrs;
+        vector<char*> argvELPP;
+        for (const auto& argStr : argvELPP_strs) {
+            argvELPP_chrs.push_back(make_unique<char[]>(argStr.length()+1));
+            std::copy(argStr.begin(), argStr.end(), argvELPP_chrs.back().get());
+            argvELPP_chrs.back().get()[argStr.length()] = '\0';
+            argvELPP.push_back(argvELPP_chrs.back().get());
         }
+        START_EASYLOGGINGPP(argcELPP, argvELPP.data());
 
-        START_EASYLOGGINGPP(ELPP_argc, ELPP_argv.data());
-
+        //
+        // Configure the logger
+        //
+        using CT = el::ConfigurationType;
+        using LVL = el::Level;
         el::Configurations logConfig;
         logConfig.setToDefault();
+        string T = "true", F = "false";
 
-        logConfig.setGlobally(el::ConfigurationType::Enabled, string("true"));
-        logConfig.setGlobally(el::ConfigurationType::ToFile, string("false"));
-        logConfig.setGlobally(el::ConfigurationType::ToStandardOutput, string("true"));
-        logConfig.setGlobally(el::ConfigurationType::MillisecondsWidth, string("3"));
-        logConfig.setGlobally(el::ConfigurationType::PerformanceTracking, string("true"));
-        logConfig.setGlobally(el::ConfigurationType::MaxLogFileSize, string("0"));
-        logConfig.setGlobally(el::ConfigurationType::LogFlushThreshold, string("0"));
-        logConfig.setGlobally(el::ConfigurationType::Format, string("%datetime %level : %msg"));
+        // Set the "global" logger parameters
+        logConfig.setGlobally(CT::ToFile, options.count("log-file") ? T : F);
+        logConfig.setGlobally(CT::ToStandardOutput, T);
+        logConfig.setGlobally(CT::MillisecondsWidth, string("3"));
+        logConfig.setGlobally(CT::PerformanceTracking, T);
+        logConfig.setGlobally(CT::MaxLogFileSize, string("0"));
+        logConfig.setGlobally(CT::LogFlushThreshold, string("0"));
 
-        // INFO, WARNING, ERROR, and FATAL are set to default by Level::Global
-        logConfig.set(el::Level::Debug, el::ConfigurationType::Format, std::string("%datetime %level : [%func] [%loc] %msg"));
-        logConfig.set(el::Level::Verbose, el::ConfigurationType::Format, std::string("%datetime %level-%vlevel : %msg"));
-        logConfig.set(el::Level::Trace, el::ConfigurationType::Format, std::string("%datetime %level : [%func] [%loc] %msg"));
+        // Adjust the logging format
+        const string dtFormat = "%datetime{%H:%m:%s}";
+        const string logFormat = dtFormat + string(" %level : [%func] [%fbase:%line] %msg");
+        logConfig.setGlobally(CT::Format, dtFormat + string(" %level : %msg"));
+        logConfig.set(LVL::Debug, CT::Format, logFormat);
+        logConfig.set(LVL::Trace, CT::Format, logFormat);
 
-        el::Loggers::addFlag(LoggingFlag::ColoredTerminalOutput);
+        // Enable requested log events
+        logConfig.set(LVL::Info, CT::Enabled, options.count("log-info") ? T : F);
+        logConfig.set(LVL::Warning, CT::Enabled, options.count("log-warning") ? F : T);
+        logConfig.set(LVL::Error, CT::Enabled, options.count("log-error") ? F : T);
+        logConfig.set(LVL::Fatal, CT::Enabled, options.count("log-fatal") ? F : T);
+        logConfig.set(LVL::Debug, CT::Enabled, options.count("log-debug") ? T : F);
+        logConfig.set(LVL::Trace, CT::Enabled, options.count("log-trace") ? T : F);
 
+        // Set logger flags
+        el::Loggers::addFlag(el::LoggingFlag::ColoredTerminalOutput);
         el::Loggers::reconfigureLogger("default", logConfig);
-
-        VLOG(0) << "Level : " << 0;
-        VLOG(1) << "Level : " << 1;
-        VLOG(2) << "Level : " << 2;
-        VLOG(3) << "Level : " << 3;
-        VLOG(4) << "Level : " << 4;
-        VLOG(5) << "Level : " << 5;
-        VLOG(6) << "Level : " << 6;
-        VLOG(7) << "Level : " << 7;
-        VLOG(8) << "Level : " << 8;
-        VLOG(9) << "Level : " << 9;
-
-        LOG(INFO) << "INFO";
-        LOG(WARNING) << "WARNING";
-        LOG(ERROR) << "ERROR";
-        // LOG(FATAL) << "FATAL";
-        LOG(DEBUG) << "DEBUG";
-        LOG(TRACE) << "TRACE";
-
-        VLOG(0) << "Logging parameters:";
-        for (const auto& arg : ELPP_argv)
-            VLOG(0) << "\t" << arg;
     }
 
-    // message about leftover arguments
+    // Message about leftover arguments
+    if (argc > 1) {
+        LOG(WARNING) << "Some command line arguments were ignored:";
+        for (auto i = 1u; static_cast<int>(i) < argc; ++i) {
+            LOG(WARNING) << "  \"" << argv[i] << "\"";
+        }
+    }
 
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 
