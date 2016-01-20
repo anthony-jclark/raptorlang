@@ -1,0 +1,33 @@
+
+
+FILE (GLOB rex_SRCS *.cpp *.cxx *.cc)
+FILE (GLOB TOKEN_SCRIPT tokens.py)
+FILE (GLOB TOKEN_INPUT tokens.in)
+
+SET (TOKEN_NAME "tokens")
+SET (TOKEN_PATH ${CMAKE_CURRENT_SOURCE_DIR}/${TOKEN_NAME})
+SET (TOKEN_HEADER ${TOKEN_PATH}.h)
+SET (TOKEN_IMPLEM ${TOKEN_PATH}.cpp)
+
+ADD_CUSTOM_COMMAND (
+    OUTPUT ${TOKEN_HEADER} ${TOKEN_IMPLEM}
+    COMMAND ${TOKEN_SCRIPT} ${TOKEN_INPUT} ${TOKEN_PATH}
+    COMMENT "Building token files..." VERBATIM
+    DEPENDS ${TOKEN_SCRIPT} ${TOKEN_INPUT}
+)
+
+MESSAGE (${TOKEN_HEADER})
+
+#
+# Create the "normal" version of the library
+#
+ADD_LIBRARY (${rex_LIB} STATIC ${rex_SRCS} ${TOKEN_HEADER} ${TOKEN_IMPLEM})
+TARGET_INCLUDE_DIRECTORIES (
+    ${rex_LIB} SYSTEM PUBLIC ${SUPPORT_PATH}/easyloggingpp/src/
+)
+
+#
+# Create a "testing" version of the library
+#
+ADD_LIBRARY (${rex_LIB}-${TEST} STATIC ${rex_SRCS} ${TOKEN_HEADER} ${TOKEN_IMPLEM})
+TARGET_COMPILE_DEFINITIONS (${rex_LIB}-${TEST} PUBLIC "${TEST}")

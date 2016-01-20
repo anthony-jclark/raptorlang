@@ -7,3 +7,6 @@
 [submodule "src/easyloggingpp"]
 	path = support/easyloggingpp
 	url = https://github.com/easylogging/easyloggingpp.git
+[submodule "support/GSL"]
+	path = support/GSL
+	url = https://github.com/Microsoft/GSL.git

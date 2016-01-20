@@ -1,0 +1,19 @@
+package test;
+N = import nothing;;
+
+# ignore this line
+#[ ignore
+these
+lines
+#]
+z = main;
+    a b = x y  ; ;
+    x = a 5 6 7;;
+    h =
+        a
+    ;
+    i =
+        a = j k 5 6;;
+        b a;
+    ;
+

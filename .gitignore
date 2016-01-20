@@ -38,3 +38,13 @@ bin/*
 
 # Ignore Mac specific files
 .DS_Store
+
+# Ignore ANTLR extras
+*.class
+.mtj.tmp/
+*.jar
+*.war
+*.ear
+hs_err_pid*
+*.java
+*.tokens

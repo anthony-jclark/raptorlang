@@ -1,0 +1,71 @@
+//
+// Identifiers
+//
+NAME        : ''        ;
+//
+// Literals (integral, floating-point, and strings)
+//
+INTEGER     : ''        ;
+FLOAT       : ''        ;
+STRING      : ''        ;
+CHARACTER   : ''        ;
+//
+// Non-code elements
+//
+COMMENT     : ''        ;
+UNDEFINED   : ''        ;
+END         : ''        ;
+//
+// Reserved keywords
+//
+TRUE        : 'true'    ;
+FALSE       : 'false'   ;
+MAIN        : 'main'    ;
+IMPORT      : 'import'  ;
+PACKAGE     : 'package' ;
+STRUCT      : 'struct'  ;
+LENGTH      : 'len'     ;
+AND         : 'and'     ;
+OR          : 'or'      ;
+//
+// Punctuation
+//
+EXCLAIM     : '!'       ;
+SEMI        : ';'       ;
+COLON       : ':'       ;
+COMMA       : ','       ;
+PERIOD      : '.'       ;
+QUESTION    : '?'       ;
+//
+// Operators
+//
+PLUS        : '+'       ;
+MINUS       : '-'       ;
+STAR        : '*'       ;
+SLASH       : '/'       ;
+EQUAL       : '='       ;
+AT          : '@'       ;
+DOLLAR      : '$'       ;
+EQUAL2      : '=='      ;
+NOT_EQUAL   : '!='      ;
+PERCENT     : '%'       ;
+CARET       : '^'       ;
+AMP         : '&'       ;
+PIPE        : '|'       ;
+TILDE       : '~'       ;
+HASH        : '#'       ;
+LESS        : '<'       ;
+LESS2       : '<<'      ;
+LESS_EQ     : '<='      ;
+GREATER     : '>'       ;
+GREATER2    : '>>'      ;
+GREATER_EQ  : '>='      ;
+//
+// Braces/brackets/parens
+//
+L_PAREN     : '('       ;
+R_PAREN     : ')'       ;
+L_BRACE     : '{'       ;
+R_BRACE     : '}'       ;
+L_SQUARE    : '['       ;
+R_SQUARE    : ']'       ;

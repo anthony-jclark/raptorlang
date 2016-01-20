@@ -1,4 +1,4 @@
-// <Copyright Holder>. Copyright (C) <Copyright Year(s)>. <License>.
+// Anthony J. Clark. Copyright (C) 2015. Apache License 2.0.
 #ifndef HEADER_SRC_INFO_H_INCLUDED
 #define HEADER_SRC_INFO_H_INCLUDED
 

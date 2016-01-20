@@ -1,4 +1,14 @@
 
+#include "info.h"
+#include "rex/rex.h"
+
+#include <cxxopts.hpp>
+
+#define ELPP_NO_DEFAULT_LOG_FILE
+#define ELPP_THREAD_SAFE
+#include <easylogging++.h>
+INITIALIZE_EASYLOGGINGPP
+
 #include <iostream>
 #include <string>
 using std::string;
@@ -8,16 +18,6 @@ using std::vector;
 using std::unique_ptr;
 using std::make_unique;
 #include <algorithm>
-
-#include "info.h"
-
-#include <cxxopts.hpp>
-
-#define ELPP_NO_DEFAULT_LOG_FILE
-#define ELPP_THREAD_SAFE
-#include <easylogging++.h>
-INITIALIZE_EASYLOGGINGPP
-
 
 
 // ------------------------------------------------------------------------
@@ -43,6 +43,8 @@ int main(int argc, char* argv[])
         ("log-fatal",           "Toggle \"FATAL\" messages (defaults to on).")
         ("log-debug",           "Toggle \"DEBUG\" messages (defaults to off).")
         ("log-trace",           "Toggle \"TRACE\" messages (defaults to off).")
+        ("log-all",             "Turn all messages on.")
+        ("log-off",             "Turn all messages off.")
         ("log-file",            "Set the log filename.", cxxopts::value<string>(), "FILE");
 
     //
@@ -145,12 +147,18 @@ int main(int argc, char* argv[])
         logConfig.set(LVL::Trace, CT::Format, logFormat);
 
         // Enable requested log events
-        logConfig.set(LVL::Info, CT::Enabled, options.count("log-info") ? T : F);
-        logConfig.set(LVL::Warning, CT::Enabled, options.count("log-warning") ? F : T);
-        logConfig.set(LVL::Error, CT::Enabled, options.count("log-error") ? F : T);
-        logConfig.set(LVL::Fatal, CT::Enabled, options.count("log-fatal") ? F : T);
-        logConfig.set(LVL::Debug, CT::Enabled, options.count("log-debug") ? T : F);
-        logConfig.set(LVL::Trace, CT::Enabled, options.count("log-trace") ? T : F);
+        if (options.count("log-all")) {
+            logConfig.setGlobally(CT::Enabled, string("true"));
+        } else if (options.count("log-off")) {
+            logConfig.setGlobally(CT::Enabled, string("false"));
+        } else {
+            logConfig.set(LVL::Info, CT::Enabled, options.count("log-info") ? T : F);
+            logConfig.set(LVL::Warning, CT::Enabled, options.count("log-warning") ? F : T);
+            logConfig.set(LVL::Error, CT::Enabled, options.count("log-error") ? F : T);
+            logConfig.set(LVL::Fatal, CT::Enabled, options.count("log-fatal") ? F : T);
+            logConfig.set(LVL::Debug, CT::Enabled, options.count("log-debug") ? T : F);
+            logConfig.set(LVL::Trace, CT::Enabled, options.count("log-trace") ? T : F);
+        }
 
         // Set logger flags
         el::Loggers::addFlag(el::LoggingFlag::ColoredTerminalOutput);
@@ -164,6 +172,7 @@ int main(int argc, char* argv[])
             LOG(WARNING) << "  \"" << argv[i] << "\"";
         }
     }
+
 
     return EXIT_SUCCESS;
 }
