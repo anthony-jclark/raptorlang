@@ -1,10 +1,21 @@
+## Where I'm at
+
+- change language grammar (more C/C++ like)
+- test lexer
+- require number to start with a digit (not .0)
+- different number bases (hex, binary, oct)
+- cmake release vs debug
+
+
 ## TODO
 
 - General
+    + goal: C++ without legacy
     + namespacing
     + setup continuous integration testing
     + user literals (_s, _h, _mi, _km, etc.)
-    + automate tokens filename (rex.h.in.cmake, etc.)
+    + use GSL
+        * owner<T*> use in libraries/containers (not general code)
 - rex
     + nested comments (Lua?)
     + tokens to consider (clang -cc1 -dump-tokens temp.cpp)
@@ -31,6 +42,14 @@
 ^=  xor_eq
 !   not
 !=  not_eq
+    + func vs proc
+    + pointers : section 3 of guidelines
+    + pointers and references (pointers are owners, everything else is not)
+    + default function arguments depend on the template
+        * a = func (a, b = 1)
+        * a = func (a, b = 1.0)
+        * a = func (a, b = 2) <-- bad, conflicts with the first one
+    + exceptions? alternatives?
 
 https://github.com/jarro2783/cxxopts
 https://code.google.com/p/cpp-project-template/wiki/Basics
@@ -44,6 +63,13 @@ https://code.google.com/p/cpp-project-template/wiki/Basics
 
 # Dev Commands
 
+```
+top-level:
+make
+make distclean
+make check
+make run
+```
 
 
 

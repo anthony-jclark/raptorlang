@@ -11,7 +11,7 @@
 SCENARIO( "The lexer \"rex\" can tokenize strings", "[rex]" ) {
 
 
-    GIVEN( "A an empty string" ) {
+    GIVEN( "An empty string" ) {
         std::istringstream iss("");
 
         WHEN( "The string is passed to the lexer" ) {
@@ -26,7 +26,7 @@ SCENARIO( "The lexer \"rex\" can tokenize strings", "[rex]" ) {
 
 
     GIVEN( "A string with a \"name\" (identifier)" ) {
-        std::istringstream iss("name");
+        std::istringstream iss("test_name");
 
         WHEN( "The string is passed to the lexer" ) {
             auto tok = get_token(iss);
@@ -37,6 +37,94 @@ SCENARIO( "The lexer \"rex\" can tokenize strings", "[rex]" ) {
             }
         }
     }
+
+
+    GIVEN( "A string with a single integer" ) {
+        std::istringstream iss("123456789");
+
+        WHEN( "The string is passed to the lexer" ) {
+            auto tok = get_token(iss);
+
+            THEN( "An \"INTEGER\" token is returned" ) {
+                REQUIRE( tok.name == TOK::INTEGER );
+                REQUIRE( tok.value == iss.str() );
+            }
+        }
+    }
+
+
+    GIVEN( "A string with a single floating-point number" ) {
+        std::istringstream iss("1234.56789");
+
+        WHEN( "The string is passed to the lexer" ) {
+            auto tok = get_token(iss);
+
+            THEN( "A \"FLOAT\" token is returned" ) {
+                REQUIRE( tok.name == TOK::FLOAT );
+                REQUIRE( tok.value == iss.str() );
+            }
+        }
+    }
+
+
+    GIVEN( "A string with an invalid single floating-point number" ) {
+        std::istringstream iss("1.234.56789");
+
+        WHEN( "The string is passed to the lexer" ) {
+            auto tok = get_token(iss);
+
+            THEN( "An \"UNDEFINED\" token is returned" ) {
+                REQUIRE( tok.name == TOK::UNDEFINED );
+                REQUIRE( tok.value == "" );
+            }
+        }
+    }
+
+
+    GIVEN( "A string with a string literal" ) {
+        std::istringstream iss("\"this is a string literal\"");
+
+        WHEN( "The string is passed to the lexer" ) {
+            auto tok = get_token(iss);
+
+            THEN( "A \"STRING\" token is returned" ) {
+                REQUIRE( tok.name == TOK::STRING );
+                REQUIRE( tok.value == iss.str() );
+            }
+        }
+    }
+
+
+    GIVEN( "A string with a character literal" ) {
+        std::istringstream iss("'c'");
+
+        WHEN( "The string is passed to the lexer" ) {
+            auto tok = get_token(iss);
+
+            THEN( "A \"CHARACTER\" token is returned" ) {
+                REQUIRE( tok.name == TOK::CHARACTER );
+                REQUIRE( tok.value == iss.str() );
+            }
+        }
+    }
+
+
+    GIVEN( "A string with an invalid character literal" ) {
+        std::istringstream iss("'cc'");
+
+        WHEN( "The string is passed to the lexer" ) {
+            auto tok = get_token(iss);
+
+            THEN( "An \"UNDEFINED\" token is returned" ) {
+                REQUIRE( tok.name == TOK::UNDEFINED );
+                REQUIRE( tok.value == "" );
+            }
+        }
+    }
+
+
+    // reserved keywords
+    // punctuators
 
 
     // GIVEN( "A string with a left and right parentheses" ) {
@@ -69,32 +157,7 @@ SCENARIO( "The lexer \"rex\" can tokenize strings", "[rex]" ) {
     // }
 
 
-    // GIVEN( "A string with a single integer" ) {
-    //     std::istringstream iss("1234567");
 
-    //     WHEN( "The string is passed to the lexer" ) {
-    //         auto tok = get_token(iss);
-
-    //         THEN( "An \"INT\" token is returned" ) {
-    //             REQUIRE( tok.name == TOK::INT );
-    //             REQUIRE( tok.value == iss.str() );
-    //         }
-    //     }
-    // }
-
-
-    // GIVEN( "A string with a single floating-point number" ) {
-    //     std::istringstream iss("123.456");
-
-    //     WHEN( "The string is passed to the lexer" ) {
-    //         auto tok = get_token(iss);
-
-    //         THEN( "A \"FLOAT\" token is returned" ) {
-    //             REQUIRE( tok.name == TOK::FLOAT );
-    //             REQUIRE( tok.value == iss.str() );
-    //         }
-    //     }
-    // }
 
 
     // GIVEN( "A string with an initializer symbol and binary operators" ) {

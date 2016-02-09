@@ -5,7 +5,7 @@
 
 #ifdef TESTING
 
-    #ifdef DEBUG
+    #ifdef DEBUGGING
 
         #include <iostream>
         #define INFO(MSG)    std::cout << "INFO    : " << MSG << std::endl;

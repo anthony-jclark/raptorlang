@@ -16,7 +16,7 @@ inline bool isalund(char c) { return std::isalpha(c) || c == '_'; }
 // --------------------------------------------------------
 Token _process_word(std::istream& ts, char c)
 {
-    DEBUG("Beginning");
+    DEBUG("Beginning of '_process_word'");
 
     // Build a single word (letters, numbers, underscores)
     std::string word{c};
@@ -36,7 +36,7 @@ Token _process_word(std::istream& ts, char c)
 // --------------------------------------------------------
 Token _process_number(std::istream& ts, char c)
 {
-    DEBUG("Beginning");
+    DEBUG("Beginning of '_process_number'");
 
     // Build a number string (dots and digits)
     std::string word;
@@ -63,16 +63,17 @@ Token _process_number(std::istream& ts, char c)
 
 
 // --------------------------------------------------------
-// Utility function used to process a "comment"
+// Utility function used to process a "string" (or 'char')
 // --------------------------------------------------------
 Token _process_string(std::istream& ts, char c, TOK t=TOK::STRING)
 {
-    DEBUG("Beginning");
+    DEBUG("Beginning of '_process_string'");
 
     // Build the string until we hit the closing quote
     std::string word{c};
     char closer = c;
     while (ts.get(c) && c != closer) { word += c; }
+    word += c;
 
     // Return the token
     if (word.back() == closer)
@@ -89,7 +90,7 @@ Token _process_string(std::istream& ts, char c, TOK t=TOK::STRING)
 // --------------------------------------------------------
 Token _process_character(std::istream& ts, char c)
 {
-    DEBUG("Beginning");
+    DEBUG("Beginning of '_process_character'");
 
     // Use _process_string to create the character
     auto t = _process_string(ts, c, TOK::CHARACTER);
@@ -107,7 +108,8 @@ Token _process_character(std::istream& ts, char c)
 // --------------------------------------------------------
 Token _process_comment(std::istream& ts, char c)
 {
-    DEBUG("Beginning");
+    DEBUG("Beginning of '_process_comment'");
+
     // Process multi-line comment
     if (c == '[') {
         while (ts.get(c))
@@ -126,7 +128,8 @@ Token _process_comment(std::istream& ts, char c)
 // --------------------------------------------------------
 Token get_token(std::istream& ts)
 {
-    DEBUG("Beginning");
+    DEBUG("Beginning of 'get_token'");
+
     // Skip white space
     char c;
     while (ts.get(c) && std::isspace(c));
@@ -138,7 +141,7 @@ Token get_token(std::istream& ts)
     else if (isalund(c)) { return _process_word(ts, c); }
 
     // Number (INTEGER or FLOAT)
-    else if (std::isdigit(c) || c == '.') { return _process_number(ts, c); }
+    else if (std::isdigit(c)) { return _process_number(ts, c); }
 
     // STRING literal
     else if (c == '"') { return _process_string(ts, c); }
@@ -146,7 +149,7 @@ Token get_token(std::istream& ts)
     // CHARACTER literal
     else if (c == '\'') { return _process_character(ts, c); }
 
-    // Must be OPERATOR or PUNCTUATOR
+    // Must be an OPERATOR or PUNCTUATOR
     else {
         ERROR("Lexing Error :: Unexpected token: " << c);
         return { TOK::UNDEFINED, "" };
