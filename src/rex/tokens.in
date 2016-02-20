@@ -27,6 +27,11 @@ STRUCT      : 'struct'  ;
 LENGTH      : 'len'     ;
 AND         : 'and'     ;
 OR          : 'or'      ;
+SET         : 'set'     ;
+LET         : 'let'     ;
+ALIAS       : 'alias'   ;
+FUNC        : 'func'    ;
+PROC        : 'proc'    ;
 //
 // Punctuation
 //

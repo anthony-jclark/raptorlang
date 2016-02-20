@@ -25,14 +25,19 @@ SET (APPLICATION_ID "${APPLICATION_VENDOR_ID}.${PROJECT_NAME}")
 #
 # Set Compiler Flag Options
 #
-SET (CMAKE_CXX_FLAGS "-std=c++1z -Wall -Wextra -Werror -Wconversion")
-SET (CMAKE_BUILD_TYPE debug)
-
+ADD_COMPILE_OPTIONS (
+    -std=c++1z -Wall -Wextra -Werror -Wconversion
+    -O3 -fvisibility-inlines-hidden -fno-common
+    -Woverloaded-virtual -Wcast-qual
+)
 
 #
 # Debugging Options
-#
-SET (CMAKE_VERBOSE_MAKEFILE 0) # Use 1 for debugging, 0 for release
+# # Use 1 for debugging, 0 for release
+SET (CMAKE_VERBOSE_MAKEFILE 0)
+SET (CMAKE_BUILD_TYPE debug)
+OPTION (DEFINE_DEBUGGING "Add debugging output" ON)
+SET (DEBUGGING "DEBUGGING")
 
 
 #

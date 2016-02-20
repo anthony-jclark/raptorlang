@@ -1,6 +1,11 @@
 
 
 FILE (GLOB rex_SRCS *.cpp *.cxx *.cc)
+
+
+#
+# Generate the Token files
+#
 FILE (GLOB TOKEN_SCRIPT tokens.py)
 FILE (GLOB TOKEN_INPUT tokens.in)
 
@@ -15,8 +20,6 @@ ADD_CUSTOM_COMMAND (
     COMMENT "Building token files..." VERBATIM
     DEPENDS ${TOKEN_SCRIPT} ${TOKEN_INPUT}
 )
-
-MESSAGE (${TOKEN_HEADER})
 
 #
 # Create the "normal" version of the library
@@ -33,7 +36,7 @@ ADD_LIBRARY (
     ${rex_LIB}-${TEST} STATIC ${rex_SRCS} ${TOKEN_HEADER} ${TOKEN_IMPLEM}
 )
 
-TARGET_COMPILE_DEFINITIONS (
-    ${rex_LIB}-${TEST} PUBLIC "${TEST}"
-    # "DEBUGGING"
-)
+TARGET_COMPILE_DEFINITIONS (${rex_LIB}-${TEST} PUBLIC ${TEST})
+IF (DEFINE_DEBUGGING)
+    TARGET_COMPILE_DEFINITIONS (${rex_LIB}-${TEST} PUBLIC ${DEBUGGING})
+ENDIF ()

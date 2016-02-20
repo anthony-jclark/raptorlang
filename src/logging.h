@@ -8,34 +8,70 @@
     #ifdef DEBUGGING
 
         #include <iostream>
-        #define INFO(MSG)    std::cout << "INFO    : " << MSG << std::endl;
-        #define WARNING(MSG) std::cout << "WARNING : " << MSG << std::endl;
-        #define ERROR(MSG)   std::cout << "ERROR   : " << MSG << std::endl;
-        #define FATAL(MSG)   std::cout << "FATAL   : " << MSG << std::endl;
-        #define DEBUG(MSG)   std::cout << "DEBUG   : " << MSG << std::endl;
-        #define TRACE(MSG)   std::cout << "TRACE   : " << MSG << std::endl;
+        #define LOG_INFO(MSG)    std::cout << "INFO    : " << MSG << std::endl;
+        #define LOG_WARNING(MSG) std::cout << "WARNING : " << MSG << std::endl;
+        #define LOG_ERROR(MSG)   std::cout << "ERROR   : " << MSG << std::endl;
+        #define LOG_FATAL(MSG)   std::cout << "FATAL   : " << MSG << std::endl;
+        #define LOG_DEBUG(MSG)   std::cout << "DEBUG   : " << MSG << std::endl;
+        #define LOG_TRACE(MSG)   std::cout << "TRACE   : " << MSG << std::endl;
 
     #else
 
-        #define INFO(MSG)
-        #define WARNING(MSG)
-        #define ERROR(MSG)
-        #define FATAL(MSG)
-        #define DEBUG(MSG)
-        #define TRACE(MSG)
+        #define LOG_INFO(MSG)
+        #define LOG_WARNING(MSG)
+        #define LOG_ERROR(MSG)
+        #define LOG_FATAL(MSG)
+        #define LOG_DEBUG(MSG)
+        #define LOG_TRACE(MSG)
 
     #endif
 
 #else
 
     #include <easylogging++.h>
-    #define INFO(MSG)    LOG(INFO)    << MSG;
-    #define WARNING(MSG) LOG(WARNING) << MSG;
-    #define ERROR(MSG)   LOG(ERROR)   << MSG;
-    #define FATAL(MSG)   LOG(FATAL)   << MSG;
-    #define DEBUG(MSG)   LOG(DEBUG)   << MSG;
-    #define TRACE(MSG)   LOG(TRACE)   << MSG;
+    #define LOG_INFO(MSG)    LOG(INFO)    << MSG;
+    #define LOG_WARNING(MSG) LOG(WARNING) << MSG;
+    #define LOG_ERROR(MSG)   LOG(ERROR)   << MSG;
+    #define LOG_FATAL(MSG)   LOG(FATAL)   << MSG;
+    #define LOG_DEBUG(MSG)   LOG(DEBUG)   << MSG;
+    #define LOG_TRACE(MSG)   LOG(TRACE)   << MSG;
 
 #endif
+
+
+// #ifdef TESTING
+
+//     #ifdef DEBUGGING
+
+//         #include <iostream>
+//         #define INFO(MSG)    std::cout << "INFO    : " << MSG << std::endl;
+//         #define WARNING(MSG) std::cout << "WARNING : " << MSG << std::endl;
+//         #define ERROR(MSG)   std::cout << "ERROR   : " << MSG << std::endl;
+//         #define FATAL(MSG)   std::cout << "FATAL   : " << MSG << std::endl;
+//         #define DEBUG(MSG)   std::cout << "DEBUG   : " << MSG << std::endl;
+//         #define TRACE(MSG)   std::cout << "TRACE   : " << MSG << std::endl;
+
+//     #else
+
+//         #define INFO(MSG)
+//         #define WARNING(MSG)
+//         #define ERROR(MSG)
+//         #define FATAL(MSG)
+//         #define DEBUG(MSG)
+//         #define TRACE(MSG)
+
+//     #endif
+
+// #else
+
+//     #include <easylogging++.h>
+//     #define INFO(MSG)    LOG(INFO)    << MSG;
+//     #define WARNING(MSG) LOG(WARNING) << MSG;
+//     #define ERROR(MSG)   LOG(ERROR)   << MSG;
+//     #define FATAL(MSG)   LOG(FATAL)   << MSG;
+//     #define DEBUG(MSG)   LOG(DEBUG)   << MSG;
+//     #define TRACE(MSG)   LOG(TRACE)   << MSG;
+
+// #endif
 
 #endif

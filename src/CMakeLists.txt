@@ -3,8 +3,7 @@
 # Compile the lexer and parser into object files
 #
 ADD_SUBDIRECTORY (rex)
-
-# ADD_SUBDIRECTORY (rar)
+ADD_SUBDIRECTORY (rar)
 
 #
 # Add the executable target
@@ -38,13 +37,3 @@ SET_TARGET_PROPERTIES (
     VERSION "${APPLICATION_VERSION_MAJOR}.${APPLICATION_VERSION_MINOR}"
     OUTPUT_NAME ${project_BIN} CLEAN_DIRECT_OUTPUT 1
 )
-
-
-#
-# Add a target for running the program without arguments
-#
-ADD_CUSTOM_TARGET (
-    run "${BIN_PATH}/${project_BIN}" DEPENDS ${project_BIN}
-    COMMENT "Running program..." VERBATIM SOURCES ${project_SRCS}
-)
-
