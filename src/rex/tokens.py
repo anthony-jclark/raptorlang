@@ -15,12 +15,13 @@ TAB = "    "
 TOK_ENUM = "TOK"
 TOK_STRUCT = "Token"
 
-TOSTRING_FCN = "TOK_toString"
-RESERVED_FCN = "getReservedTOK"
-PUNCT_FCN = "getPunctuatorTOK"
+TOSTRING = "to_string"
+TOSTRING_FCN = "TOK_" + TOSTRING
+RESERVED_FCN = "get_reserved_TOK"
+PUNCT_FCN = "get_punctuator_TOK"
 
-GETRESERVED_FCN = "getReservedList"
-GETPUNCTS_FCN = "getPunctuatorList"
+GETRESERVED_FCN = "get_list_reserved"
+GETPUNCTS_FCN = "get_list_punctuator"
 
 MAX_COL = 80
 COMMENT_BANNER = "// " + "-" * 56
@@ -137,7 +138,7 @@ def token_struct():
     struct_string = "struct " + TOK_STRUCT + "{\n"
     struct_string += TAB + TOK_ENUM + " name;\n"
     struct_string += TAB + "std::string value;\n"
-    struct_string += TAB + "std::string toString() const;\n"
+    struct_string += TAB + "std::string " + TOSTRING + "() const;\n"
     return struct_string + "};\n\n"
 
 
@@ -147,7 +148,7 @@ def token_string_proto(separate=False):
     bnr_string += COMMENT_BANNER
 
     tok_str = "std::string " + TOSTRING_FCN + "(" + TOK_ENUM + " t)"
-    tok_tostr = "std::string Token::toString() const"
+    tok_tostr = "std::string Token::" + TOSTRING + "() const"
     tok_struct = "std::ostream& operator<<(std::ostream& os, const "
     tok_struct += TOK_STRUCT + "& t)"
     tok_enum = "std::ostream& operator<<(std::ostream& os, const "
@@ -203,11 +204,13 @@ def token_string_fcn(tokens):
 
     # The struct output stream function
     fcn_string += struct + " {\n"
-    fcn_string += TAB + "os << t.toString();\n" + TAB + "return os;\n}\n"
+    fcn_string += TAB + "os << t." + TOSTRING + "();\n" + TAB
+    fcn_string += "return os;\n}\n"
 
     # The enum output stream function
     fcn_string += enum + " {\n"
-    fcn_string += TAB + "os << TOK_toString(t);\n" + TAB + "return os;\n}\n"
+    fcn_string += TAB + "os << " + TOSTRING_FCN + "(t);\n" + TAB
+    fcn_string += "return os;\n}\n"
 
     return fcn_string + "\n"
 

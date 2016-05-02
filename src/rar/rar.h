@@ -11,17 +11,6 @@
 #include "../rex/rex.h"
 
 
-#include "llvm/ADT/STLExtras.h"
-#include "llvm/IR/IRBuilder.h"
-#include "llvm/IR/LLVMContext.h"
-#include "llvm/IR/Module.h"
-#include "llvm/IR/Verifier.h"
-#include "llvm/IR/Intrinsics.h"
-
-
-#include "ast.h"
-
-
 #include <string>
 #include <sstream>
 #include <unordered_map>
@@ -30,9 +19,6 @@
 
 
 namespace raptor {
-
-    using size_type = unsigned long;
-
     namespace parser {
 
 
@@ -41,7 +27,11 @@ namespace raptor {
 // Forward-delcaration of the AST class
 class AST;
 
+
+
 using namespace raptor::lexer;
+
+
 
 // --------------------------------------------------------
 // Parsing class
@@ -49,10 +39,10 @@ using namespace raptor::lexer;
 class rar
 {
 
-friend class AST;
-friend class IdentifierASTN;
-template<typename T> friend class NumberASTN;
-friend class BinaryOpASTN;
+// friend class AST;
+// friend class IdentifierASTN;
+// template<typename T> friend class NumberASTN;
+// friend class BinaryOpASTN;
 
 public:
 
@@ -61,13 +51,6 @@ public:
     lexer::rex lexer;
 
     std::vector<std::unique_ptr<AST>> top_level;
-
-
-protected:
-
-    llvm::IRBuilder<> ir_builder;
-    std::unique_ptr<llvm::Module> llvm_module;
-    std::map<std::string, llvm::Value *> NamedValues;
 
 
 private:
@@ -99,20 +82,13 @@ public:
     rar(std::istream& ss, std::string s="") :
         source_stream(ss),
         source_name(s),
-        lexer(source_stream, source_name),
-        ir_builder(llvm::getGlobalContext()),
-        llvm_module(llvm::make_unique<llvm::Module>(source_name.c_str(),
-            llvm::getGlobalContext()))
+        lexer(source_stream, source_name)
     {};
 
 
 public:
 
     void parse(void);
-
-    std::string toString(void) const;
-    void dump(void) { this->llvm_module->dump(); }
-
 
 private:
 

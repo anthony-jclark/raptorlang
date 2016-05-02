@@ -59,7 +59,7 @@ Token& rex::process_word(char c)
     this->unget();
 
     // Return the token
-    auto res = getReservedTOK(word);
+    auto res = get_reserved_TOK(word);
     if (res == TOK::UNDEFINED)
         return (this->cur_token = {TOK::NAME, word});
     else
@@ -178,7 +178,7 @@ Token& rex::process_punctuator(char c)
     LOG_DEBUG("Beginning of 'rex::process_punctuator'");
 
     std::string word{c};
-    auto punc = getPunctuatorTOK(this->token_stream, word);
+    auto punc = get_punctuator_TOK(this->token_stream, word);
     if (punc == TOK::UNDEFINED) {
         LOG_ERROR(this->error_msg("Unexpected token: " + word));
         return (this->cur_token = { TOK::UNDEFINED, "" });

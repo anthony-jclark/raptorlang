@@ -2,9 +2,14 @@
 #ifndef _AST_HEADER_
 #define _AST_HEADER_
 
-#include "rar.h"
+
+#include "../general.h"
+#include "visit.h"
 
 #include <iosfwd>
+#include <string>
+
+
 
 
 namespace raptor {
@@ -13,29 +18,14 @@ namespace raptor {
 
 
 
-// Forward-declaration of raptor::parser::rar
-class rar;
-
-
-
-
-// Get spaces
-inline std::string ws(size_type indent) {
-    return std::string(indent, ' ');
-}
-
 
 // --------------------------------------------------------
 // Base class for the abstract syntax tree
 // --------------------------------------------------------
-class AST {
-protected:
-    rar &par;
+class AST : public Visitable
+{
 public:
-    explicit AST(rar &p) : par(p) {}
     virtual ~AST() = default;
-    virtual llvm::Value* codegen() = 0;
-    virtual std::string toString(size_type indent) const = 0;
 };
 using ASTN_PTR = std::unique_ptr<AST>;
 
@@ -45,40 +35,41 @@ using ASTN_PTR = std::unique_ptr<AST>;
 // --------------------------------------------------------
 // Identifier (concrete AST node)
 // --------------------------------------------------------
-class IdentifierASTN : public AST {
+class IdentifierASTN : public AST
+{
+public:
     std::string name;
-public:
-    IdentifierASTN(rar &p, const std::string& id) : AST(p), name(id) {};
-    virtual std::string toString(size_type indent) const override final;
+    explicit IdentifierASTN(const std::string& id) : name(id) {};
+    virtual void accept(Visitor &v) override final { v.visit(*this); }
 };
 
 
 
 
 // --------------------------------------------------------
-// Number (concrete AST)
+// Integer (concrete AST)
 // --------------------------------------------------------
-
-// using INTEGER = long;
-using INTEGER = double;
-using FLOAT = double;
-
-template<typename T>
-class NumberASTN : public AST {
-    T number;
+class IntegerASTN : public AST
+{
 public:
-    NumberASTN(rar &p, T val) : AST(p), number(val) {};
-    virtual llvm::Value* codegen() override final;
-    virtual std::string toString(size_type indent) const override final;
+    Integer value;
+    explicit IntegerASTN(Integer val) : value(val) {};
+    virtual void accept(Visitor &v) override final { v.visit(*this); }
 };
 
-// class DoubleASTN : public NumberASTN {
-//     double number;
-// public:
-//     DoubleASTN(rar &p, double n) : NumberASTN(p), number(n) {}
-//     virtual llvm::Value* codegen() override final;
-//     virtual std::string toString(size_type indent) const override final;
-// };
+
+
+
+// --------------------------------------------------------
+// Float (concrete AST)
+// --------------------------------------------------------
+class FloatASTN : public AST
+{
+public:
+    Float value;
+    explicit FloatASTN(Float val) : value(val) {};
+    virtual void accept(Visitor &v) override final { v.visit(*this); }
+};
 
 
 
@@ -86,18 +77,17 @@ public:
 // --------------------------------------------------------
 // Binary operator (concrete AST node)
 // --------------------------------------------------------
-class BinaryOpASTN : public AST {
+class BinaryOpASTN : public AST
+{
+public:
     std::string binop;
     ASTN_PTR lhs, rhs;
-public:
-    BinaryOpASTN(rar &p, std::string op, ASTN_PTR l, ASTN_PTR r) :
-        AST(p),
+    BinaryOpASTN(std::string op, ASTN_PTR l, ASTN_PTR r) :
         binop(op),
         lhs(std::move(l)),
         rhs(std::move(r))
     {};
-    virtual llvm::Value* codegen() override final;
-    virtual std::string toString(size_type indent) const override final;
+    virtual void accept(Visitor &v) override final { v.visit(*this); }
 };
 
 

@@ -1,8 +1,9 @@
 
 #include "rar.h"
+#include "ast.h"
 #include "../logging.h"
 
-#include <iostream>
+
 
 
 namespace raptor {
@@ -47,13 +48,18 @@ ASTN_PTR rar::compute_atom()
     }
 
     // Parse a number
-    else if (cur_tok.name == TOK::INTEGER || cur_tok.name == TOK::FLOAT) {
-        return std::make_unique<NumberASTN<INTEGER>>(this, std::stoi(cur_tok.value));
+    else if (cur_tok.name == TOK::INTEGER) {
+        return std::make_unique<IntegerASTN>(std::stol(cur_tok.value));
+    }
+
+    // Parse a floating-point number
+    else if (cur_tok.name == TOK::FLOAT) {
+        return std::make_unique<FloatASTN>(std::stod(cur_tok.value));
     }
 
     // Check for an invalid token
     else {
-        LOG_ERROR(this->error_msg("Unexpected token : " + cur_tok.toString()));
+        LOG_ERROR(this->error_msg("Unexpected token : " + cur_tok.to_string()));
         return nullptr;
     }
 }
@@ -85,7 +91,7 @@ ASTN_PTR rar::parse_expression(size_type min_prec)
         auto op = cur_tok.value;
         cur_tok = this->lexer.get_token();
         auto rhs = parse_expression(next_min_prec);
-        lhs = std::make_unique<BinaryOpASTN>(this, op, std::move(lhs), std::move(rhs));
+        lhs = std::make_unique<BinaryOpASTN>(op, std::move(lhs), std::move(rhs));
     }
 
     return lhs;
@@ -107,25 +113,12 @@ void rar::parse(void)
 }
 
 
-std::string rar::toString() const
-{
-    std::ostringstream oss;
-    for (const auto& node : this->top_level)
-        if (node) {
-            oss << node->toString(0) << "\n";
-            auto cd = node->codegen();
-            if (cd) cd->dump();
-        }
-        else
-            oss << "nullptr\n";
-    return oss.str();
-}
-
-
-
 }
 }
 
+
+#include "codegenerator.h"
+#include "astprinter.h"
 
 //
 // Test program --> should be deleted later
@@ -140,11 +133,11 @@ int main() {
     auto parser = raptor::parser::rar(ss);
     parser.parse();
 
-    LOG_INFO("\n" + parser.toString() + "\n");
+    auto printer = raptor::parser::ASTPrinter();
+    LOG_INFO("\n" + printer.get_string(parser.top_level[0].get()) + "\n");
 
-    parser.dump();
-
-    std::cout << std::endl;
+    auto codegen = raptor::parser::CodeGenerator(parser.source_name);
+    codegen.generate(parser.top_level[0].get())->dump();
 
     return 0;
 }

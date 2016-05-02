@@ -2,7 +2,8 @@
 #ifndef _REX_HEADER_
 #define _REX_HEADER_
 
-#include <iosfwd>
+
+#include "../general.h"
 
 
 // --------------------------------------------------------
@@ -16,10 +17,11 @@
 //      utility functions for accessing keywords and operators
 
 
+#include <iosfwd>
+
+
+
 namespace raptor {
-
-    using size_type = unsigned long;
-
     namespace lexer {
 
 

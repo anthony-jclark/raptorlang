@@ -138,7 +138,7 @@ SCENARIO ( "The lexer \"rex\" can tokenize strings", "[rex]" ) {
 
     GIVEN ( "A string containing each of the reserved keywords" ) {
         std::stringstream ss;
-        auto reserved_token_map = getReservedList();
+        auto reserved_token_map = get_list_reserved();
 
         std::vector<TOK> tok_names;
         std::vector<std::string> tok_values;
@@ -170,7 +170,7 @@ SCENARIO ( "The lexer \"rex\" can tokenize strings", "[rex]" ) {
 
     GIVEN ( "A string containing each of the punctuators" ) {
         std::stringstream ss;
-        auto punctuator_token_map = getPunctuatorList();
+        auto punctuator_token_map = get_list_punctuator();
 
         std::vector<TOK> tok_names;
         std::vector<std::string> tok_values;

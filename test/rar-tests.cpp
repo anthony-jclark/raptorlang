@@ -6,7 +6,11 @@
 
 
 #include <catch.hpp>
+
 #include "rar/rar.h"
+#include "rar/ast.h"
+
+
 using namespace raptor::parser;
 
 // #include <vector>

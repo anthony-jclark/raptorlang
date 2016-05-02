@@ -76,27 +76,27 @@ enum class TOK
 struct Token{
     TOK name;
     std::string value;
-    std::string toString() const;
+    std::string to_string() const;
 };
 
 // --------------------------------------------------------
 // Functions for printing Tokens and TOKs
 // --------------------------------------------------------
-std::string TOK_toString(TOK t);
+std::string TOK_to_string(TOK t);
 std::ostream& operator<<(std::ostream& os, const Token& t);
 std::ostream& operator<<(std::ostream& os, const TOK& t);
 
 // --------------------------------------------------------
 // Utility function used to check for reserved words
 // --------------------------------------------------------
-std::unordered_map<std::string, TOK> getReservedList();
-TOK getReservedTOK(std::string word);
+std::unordered_map<std::string, TOK> get_list_reserved();
+TOK get_reserved_TOK(std::string word);
 
 // --------------------------------------------------------
 // Utility function used to check for punctuators
 // --------------------------------------------------------
-std::unordered_map<std::string, TOK> getPunctuatorList();
-TOK getPunctuatorTOK(std::istream& ts, std::string &punc);
+std::unordered_map<std::string, TOK> get_list_punctuator();
+TOK get_punctuator_TOK(std::istream& ts, std::string &punc);
 
 }
 }

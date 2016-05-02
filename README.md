@@ -37,6 +37,8 @@ http://www.programcreek.com/2011/02/how-compiler-works/
 - always delete, but allow move operations (not really shared)
 - warn for expressions with no effect
 - anon functions
+- fix namespacing and code organization (move codegen out of parser namespace) 
+- bash special characters
 
 ## Purpose
 

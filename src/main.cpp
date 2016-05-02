@@ -1,6 +1,5 @@
 
 #include "info.h"
-#include "rex/rex.h"
 
 #include <cxxopts.hpp>
 

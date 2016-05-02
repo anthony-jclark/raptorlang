@@ -16,7 +16,7 @@ namespace lexer{
 // --------------------------------------------------------
 // Functions for printing Tokens and TOKs
 // --------------------------------------------------------
-std::string TOK_toString(TOK t)
+std::string TOK_to_string(TOK t)
 {
     const auto NUM_TOK = 55;
     static const std::array<std::string, NUM_TOK> TOK_STRINGS = {{
@@ -32,22 +32,22 @@ std::string TOK_toString(TOK t)
     }};
     return TOK_STRINGS[static_cast<unsigned>(t)];
 }
-std::string Token::toString() const {
-    return "{" + TOK_toString(this->name) + ":\"" + this->value + "\"}";
+std::string Token::to_string() const {
+    return "{" + TOK_to_string(this->name) + ":\"" + this->value + "\"}";
 }
 std::ostream& operator<<(std::ostream& os, const Token& t) {
-    os << t.toString();
+    os << t.to_string();
     return os;
 }
 std::ostream& operator<<(std::ostream& os, const TOK& t) {
-    os << TOK_toString(t);
+    os << TOK_to_string(t);
     return os;
 }
 
 // --------------------------------------------------------
 // Utility function used to check for reserved words
 // --------------------------------------------------------
-std::unordered_map<std::string, TOK> getReservedList()
+std::unordered_map<std::string, TOK> get_list_reserved()
 {
     const std::unordered_map<std::string, TOK> TOK_KEYWORDS = {
         {"true", TOK::TRUE},
@@ -67,9 +67,9 @@ std::unordered_map<std::string, TOK> getReservedList()
     };
     return TOK_KEYWORDS;
 }
-TOK getReservedTOK(std::string word)
+TOK get_reserved_TOK(std::string word)
 {
-    static const auto TOK_KEYWORDS = getReservedList();
+    static const auto TOK_KEYWORDS = get_list_reserved();
     auto search = TOK_KEYWORDS.find(word);
     if (search != TOK_KEYWORDS.end()) {
         return search->second;
@@ -82,7 +82,7 @@ TOK getReservedTOK(std::string word)
 // --------------------------------------------------------
 // Utility function used to check for punctuators
 // --------------------------------------------------------
-std::unordered_map<std::string, TOK> getPunctuatorList()
+std::unordered_map<std::string, TOK> get_list_punctuator()
 {
     const std::unordered_map<std::string, TOK> TOK_PUNCTUATORS = {
         {"!", TOK::EXCLAIM},
@@ -121,12 +121,12 @@ std::unordered_map<std::string, TOK> getPunctuatorList()
     };
     return TOK_PUNCTUATORS;
 }
-TOK getPunctuatorTOK(std::istream& ts, std::string &punc)
+TOK get_punctuator_TOK(std::istream& ts, std::string &punc)
 {
     static const auto MAX_PUNC_CHARS = 2;
     static const auto MAX_ALLOWED_CHARS = 2u;
     static_assert(MAX_PUNC_CHARS == MAX_ALLOWED_CHARS);
-    static const auto TOK_PUNCTUATORS = getPunctuatorList();
+    static const auto TOK_PUNCTUATORS = get_list_punctuator();
 
     auto punc_size = 1u;
     auto return_token = TOK::UNDEFINED;
