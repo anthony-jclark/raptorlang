@@ -39,6 +39,7 @@ http://www.programcreek.com/2011/02/how-compiler-works/
 - anon functions
 - fix namespacing and code organization (move codegen out of parser namespace) 
 - bash special characters
+- parallel computations with keyword and
 
 ## Purpose
 
